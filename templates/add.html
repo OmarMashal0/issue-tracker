@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}Add Item - Issue Tracker{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <div class="form-header">
+        <h2>Add New Item</h2>
+        <a href="{{ url_for('index') }}" class="btn btn-secondary">← Back to List</a>
+    </div>
+
+    <form method="POST" class="item-form">
+        <div class="form-group">
+            <label for="title">Title *</label>
+            <input type="text" id="title" name="title" required 
+                   placeholder="Enter item title" class="form-input">
+        </div>
+
+        <div class="form-group">
+            <label for="description">Description</label>
+            <textarea id="description" name="description" rows="4" 
+                      placeholder="Enter item description" class="form-textarea"></textarea>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="assignee">Assignee</label>
+                <input type="text" id="assignee" name="assignee" 
+                       placeholder="Enter assignee name" class="form-input">
+            </div>
+
+            <div class="form-group">
+                <label for="status">Status</label>
+                <select id="status" name="status" class="form-select">
+                    <option value="Open">Open</option>
+                    <option value="In Progress">In Progress</option>
+                    <option value="Done">Done</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="priority">Priority</label>
+                <select id="priority" name="priority" class="form-select">
+                    <option value="1">1 - High</option>
+                    <option value="2">2 - High-Medium</option>
+                    <option value="3" selected>3 - Medium</option>
+                    <option value="4">4 - Low-Medium</option>
+                    <option value="5">5 - Low</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Create Item</button>
+            <a href="{{ url_for('index') }}" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

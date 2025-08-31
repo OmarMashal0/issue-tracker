@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+
+{% block title %}{{ item.title }} - Issue Tracker{% endblock %}
+
+{% block content %}
+<div class="item-detail-container">
+    <div class="item-header">
+        <div class="item-title-section">
+            <h1>{{ item.title }}</h1>
+            <div class="item-meta">
+                <span class="item-id">ID: {{ item.id }}</span>
+            </div>
+        </div>
+        <div class="item-actions">
+            <a href="{{ url_for('index') }}" class="btn btn-secondary">← Back to Menu</a>
+            <a href="{{ url_for('edit', item_id=item.id) }}" class="btn btn-edit">Edit</a>
+            <a href="{{ url_for('delete', item_id=item.id) }}" 
+               class="btn btn-delete"
+               onclick="return confirm('Delete this item?')">Delete</a>
+        </div>
+    </div>
+
+    <div class="item-content">
+        <div class="item-main">
+            <div class="item-description">
+                <h3>Description</h3>
+                <p>{{ item.description or 'No description provided.' }}</p>
+            </div>
+
+            <div class="item-details-grid">
+                <div class="detail-card">
+                    <h4>Status</h4>
+                    <span class="status-badge status-{{ item.status.lower().replace(' ', '-') }}">
+                        {{ item.status }}
+                    </span>
+                </div>
+
+                <div class="detail-card">
+                    <h4>Priority</h4>
+                    <span class="priority-badge priority-{{ item.priority }}">
+                        {{ item.priority }}
+                    </span>
+                </div>
+
+                <div class="detail-card">
+                    <h4>Assignee</h4>
+                    <p>{{ item.assignee or 'Unassigned' }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Comments Section -->
+    <div class="comments-section">
+        <h3>Comments</h3>
+        
+        {% if notes %}
+            <div class="comments-list">
+                {% for note in notes %}
+                <div class="comment">
+                    <div class="comment-header">
+                        <span class="comment-author">{{ note.author }}</span>
+                        <span class="comment-timestamp">{{ note.timestamp }}</span>
+                    </div>
+                    <div class="comment-content">
+                        {{ note.content }}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p>No comments yet.</p>
+        {% endif %}
+
+        <!-- Add Comment Form -->
+        <div class="add-comment">
+            <h4>Add Comment</h4>
+            <form method="POST" action="{{ url_for('add_comment') }}" class="comment-form">
+                <input type="hidden" name="item_id" value="{{ item.id }}">
+                <div class="form-group">
+                    <input type="text" name="author" placeholder="Your name" required class="form-input">
+                </div>
+                <div class="form-group">
+                    <textarea name="content" placeholder="Write your comment..." required rows="3" class="form-textarea"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Add Comment</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

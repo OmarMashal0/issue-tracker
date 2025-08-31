@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block title %}List View - Issue Tracker{% endblock %}
+
+{% block content %}
+<div class="list-header">
+    <h2>Issue List</h2>
+    
+    <!-- Filters -->
+    <div class="filters">
+        <form method="GET" class="filter-form">
+            <select name="status" class="filter-select">
+                <option value="">All Statuses</option>
+                <option value="Open" {% if current_status == 'Open' %}selected{% endif %}>Open</option>
+                <option value="In Progress" {% if current_status == 'In Progress' %}selected{% endif %}>In Progress</option>
+                <option value="Done" {% if current_status == 'Done' %}selected{% endif %}>Done</option>
+            </select>
+            
+            <select name="priority" class="filter-select">
+                <option value="">All Priorities</option>
+                <option value="1" {% if current_priority == '1' %}selected{% endif %}>1 - High</option>
+                <option value="2" {% if current_priority == '2' %}selected{% endif %}>2 - High-Medium</option>
+                <option value="3" {% if current_priority == '3' %}selected{% endif %}>3 - Medium</option>
+                <option value="4" {% if current_priority == '4' %}selected{% endif %}>4 - Low-Medium</option>
+                <option value="5" {% if current_priority == '5' %}selected{% endif %}>5 - Low</option>
+            </select>
+            
+            <input type="text" name="assignee" placeholder="Filter by assignee" 
+                   value="{{ current_assignee }}" class="filter-input">
+            
+            <button type="submit" class="filter-btn">Apply Filters</button>
+            <a href="{{ url_for('index') }}" class="clear-btn">Clear</a>
+        </form>
+    </div>
+</div>
+
+<div class="table-container">
+    <table class="items-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Title</th>
+                <th>Assignee</th>
+                <th>Status</th>
+                <th>Priority</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in items %}
+            <tr>
+                <td>{{ item.id }}</td>
+                <td class="item-title">
+                    <a href="{{ url_for('view', item_id=item.id) }}">{{ item.title }}</a>
+                </td>
+                <td>{{ item.assignee or 'Unassigned' }}</td>
+                <td>
+                    <span class="status-badge status-{{ item.status.lower().replace(' ', '-') }}">
+                        {{ item.status }}
+                    </span>
+                </td>
+                <td>
+                    <span class="priority-badge priority-{{ item.priority }}">
+                        {{ item.priority }}
+                    </span>
+                </td>
+                <td>
+                    <a href="{{ url_for('view', item_id=item.id) }}" class="btn btn-small btn-view">View</a>
+                    <a href="{{ url_for('edit', item_id=item.id) }}" class="btn btn-small btn-edit">Edit</a>
+                    <a href="{{ url_for('delete', item_id=item.id) }}" 
+                       class="btn btn-small btn-delete"
+                       onclick="return confirm('Delete this item?')">Delete</a>
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="6" class="no-items">No items found. <a href="{{ url_for('add') }}">Create your first item!</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div class="list-footer">
+    <p class="item-count">Total: {{ items|length }} items</p>
+    <a href="{{ url_for('add') }}" class="btn btn-primary">Add New Item</a>
+</div>
+{% endblock %}
