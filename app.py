@@ -1,7 +1,8 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
 from db import init_db, add_item, get_items, get_item, update_item, delete_item, add_note, get_notes
+from api import api
 
-app = Flask(__name__)
+app = Flask(__name__); api.init_app(app)
 app.secret_key = 'secret'
 
 # create database
