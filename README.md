@@ -1,21 +1,36 @@
 # Issue Tracker
 
-A lightweight web application for tracking issues and tasks, built with **Flask** and **SQLite**.  
-Designed for individuals and small teams who need a simple way to manage tasks and track progress.
+A lightweight, full-featured web application for tracking issues and tasks, built with **Flask** and **SQLite**.  
+Designed for individuals and small teams who need a simple way to manage tasks, collaborate, and track progress.
 
 ---
 
-## Features
-- Create, edit, view, and delete items
-- Filter and sort by status, priority, and assignee
-- Color-coded priority labels (high / medium / low)
-- Comment system for item discussions
-- Clean table view with automatic ordering (status → priority)
-- SQLite database for persistence
+## 🚀 Features
+- **Authentication System**
+  - Register new users with secure password hashing (bcrypt)
+  - Login / Logout functionality with session management
+- **Task Management**
+  - Create, edit, view, and delete tasks
+  - Assign tasks to specific users
+  - Filter and sort tasks by **status**, **priority**, or **assignee**
+  - Owner and Shared task distinction with badges
+- **Permissions & Sharing**
+  - Share tasks with other users by username
+  - Grant fine-grained permissions:
+    - Can edit status ✅
+    - Can edit assignee ✅
+  - Owners can revoke (unshare) access anytime
+- **Comments**
+  - Add comments to tasks for discussions
+  - Timestamps and author details included
+- **UI Enhancements**
+  - Color-coded **status** and **priority** labels
+  - Responsive design with clean table & detail views
+  - Flash messages for user feedback
 
 ---
 
-## Screenshots
+## 📸 Screenshots
 
 ### Home (Issues List)
 ![Home - Issues](screenshots/home-issues.png)
@@ -23,19 +38,29 @@ Designed for individuals and small teams who need a simple way to manage tasks a
 ### Add Item
 ![Add Item](screenshots/add.png)
 
-### View Item Details
+### Edit Item
+![Edit Item](screenshots/edit.png)
+
+### View Task
 ![View Task](screenshots/view-task.png)
 
+### Share Task
+![Share Task](screenshots/share.png)
+
+### Login
+![Login](screenshots/login.png)
+
 ---
 
-## Tech Stack
-- **Backend**: Python (Flask)
-- **Database**: SQLite3
+## 🛠 Tech Stack
+- **Backend**: Python (Flask, Flask-Login, Flask-RESTful)
+- **Database**: SQLite3, easily extendable to PostgreSQL (Soon in the Next Version!)
 - **Frontend**: HTML, CSS, Jinja2 templates
+- **Containerization**: Docker & Docker Compose
 
 ---
 
-## Quick Start
+## ⚡ Quick Start
 
 ### Prerequisites
 - Python 3.7+
@@ -53,51 +78,91 @@ Visit: [http://127.0.0.1:5000](http://127.0.0.1:5000)
 
 ---
 
-## Project Structure
+## 📂 Project Structure
 ```
 issue-tracker/
-├── app.py            # flask routes and application logic
-├── db.py             # database functions
-├── requirements.txt  # dependencies
+├── app.py                # Flask routes and application logic
+├── db.py                 # Database models & helper functions
+├── api.py                # RESTful API endpoints
+├── requirements.txt      # Dependencies
+├── Dockerfile            # Docker configuration
+├── docker-compose.yml    # Docker Compose config
+├── items.db              # Preloaded database (for demo)
 ├── static/
-│   └── style.css     # css styling
+│   └── style.css         # CSS styling
 ├── templates/
-│   ├── base.html     # shared layout
-│   ├── list.html     # list view
-│   ├── add.html      # add form
-│   ├── edit.html     # edit form
-│   └── view.html     # item details
-├── screenshots/      # project screenshots
+│   ├── base.html         # Shared layout
+│   ├── list.html         # List view
+│   ├── add.html          # Add form
+│   ├── edit.html         # Edit form (with permissions)
+│   ├── view.html         # Item details + comments + sharing
+│   ├── login.html        # Login page
+│   ├── register.html     # Register page
+│   └── share.html        # Share task form
+├── screenshots/          # Project screenshots
 │   ├── home-issues.png
 │   ├── add.png
-│   └── view-task.png
+│   ├── edit.png
+│   ├── view-task.png
+│   ├── share.png
+│   └── login.png
 └── README.md
+
 ```
 
 ---
 
-## Database Schema
+## 🗄 Database Schema
 
-### Items
+### Users
+| Field   | Type | Description |
+|---------|------|-------------|
+| id      | INT  | Primary key |
+| username| TEXT | Unique username |
+| password| TEXT | Hashed password |
+| role    | TEXT | Default "user" |
+
+### Items (Tasks)
 | Field       | Type | Description |
 |-------------|------|-------------|
-| id          | INT  | primary key |
-| title       | TEXT | item title |
-| description | TEXT | item description |
+| id          | INT  | Primary key |
+| title       | TEXT | Task title |
+| description | TEXT | Task description |
 | status      | TEXT | Open / In Progress / Done |
-| priority    | INT  | 1=High, 3=Medium, 5=Low |
-| assignee    | TEXT | responsible person |
+| priority    | INT  | 1=High → 5=Low |
+| assignee    | TEXT | Responsible person |
+| user_id     | INT  | Owner user ID |
 
-### Notes
+### Notes (Comments)
 | Field     | Type     | Description |
 |-----------|----------|-------------|
-| id        | INT      | primary key |
-| item_id   | INT      | reference to item |
-| author    | TEXT     | note author |
-| content   | TEXT     | note content |
-| timestamp | DATETIME | created time |
+| id        | INT      | Primary key |
+| item_id   | INT      | Reference to task |
+| author    | TEXT     | Comment author |
+| content   | TEXT     | Comment body |
+| timestamp | DATETIME | Created time |
+
+### Task Shares
+| Field            | Type | Description |
+|------------------|------|-------------|
+| id               | INT  | Primary key |
+| task_id          | INT  | Task being shared |
+| user_id          | INT  | User with access |
+| can_edit_status  | INT  | Permission flag |
+| can_edit_assignee| INT  | Permission flag |
 
 ---
 
-## License
+## 📦 Deployment (Optional)
+You can run this app in Docker:
+
+```bash
+docker-compose up --build
+```
+
+App will run on [http://localhost:5000](http://localhost:5000)
+
+---
+
+## 📜 License
 This project is open source and available under the [MIT License](LICENSE).

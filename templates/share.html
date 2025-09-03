@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Share Task: {{ item.title }}</h2>
+<form method="POST">
+  <div>
+    <label>Username to share with:</label>
+    <input type="text" name="username" required>
+  </div>
+  <div>
+    <label><input type="checkbox" name="can_edit_status"> Can edit status</label><br>
+    <label><input type="checkbox" name="can_edit_assignee"> Can edit assignee</label>
+  </div>
+  <button type="submit">Share</button>
+</form>
+{% endblock %}

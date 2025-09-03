@@ -1,33 +1,7 @@
-# Python
 __pycache__/
-*.py[cod]
-*$py.class
-
-# Virtual environments
-venv/
-env/
-ENV/
-
-# Database
-*.db
-*.sqlite
-*.sqlite3
-
-# Environment variables
+*.pyc
 .env
-
-# IDE
-.vscode/
-.idea/
-.vs/
-
-# Flask
-instance/
-.webassets-cache
-
-# Logs
-*.log
-
-# OS
+.vs
 .DS_Store
-Thumbs.db
+venv/
+instance/

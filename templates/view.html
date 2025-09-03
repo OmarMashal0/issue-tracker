@@ -13,10 +13,15 @@
         </div>
         <div class="item-actions">
             <a href="{{ url_for('index') }}" class="btn btn-secondary">← Back to Menu</a>
-            <a href="{{ url_for('edit', item_id=item.id) }}" class="btn btn-edit">Edit</a>
-            <a href="{{ url_for('delete', item_id=item.id) }}" 
-               class="btn btn-delete"
-               onclick="return confirm('Delete this item?')">Delete</a>
+
+            {% if current_user.id == item.user_id %}
+                <a href="{{ url_for('edit', item_id=item.id) }}" class="btn btn-edit">Edit</a>
+                <a href="{{ url_for('delete', item_id=item.id) }}" class="btn btn-delete"
+                onclick="return confirm('Delete this item?')">Delete</a>
+                <a href="{{ url_for('share', item_id=item.id) }}" class="btn btn-primary">Share</a>
+            {% elif item.can_edit_status or item.can_edit_assignee %}
+                <a href="{{ url_for('edit', item_id=item.id) }}" class="btn btn-edit">Edit (Shared)</a>
+            {% endif %}
         </div>
     </div>
 
@@ -31,7 +36,7 @@
                 <div class="detail-card">
                     <h4>Status</h4>
                     <span class="status-badge status-{{ item.status.lower().replace(' ', '-') }}">
-                        {{ item.status }}
+                             {{ item.status }}
                     </span>
                 </div>
 
@@ -53,7 +58,6 @@
     <!-- Comments Section -->
     <div class="comments-section">
         <h3>Comments</h3>
-        
         {% if notes %}
             <div class="comments-list">
                 {% for note in notes %}
@@ -72,7 +76,6 @@
             <p>No comments yet.</p>
         {% endif %}
 
-        <!-- Add Comment Form -->
         <div class="add-comment">
             <h4>Add Comment</h4>
             <form method="POST" action="{{ url_for('add_comment') }}" class="comment-form">
@@ -87,5 +90,25 @@
             </form>
         </div>
     </div>
+
+    {% if shares %}
+    <div class="shares-section">
+        <h3>Shared With</h3>
+        <ul>
+            {% for share in shares %}
+            <li>
+                {{ share.username }}
+                {% if share.can_edit_status %} (can edit status){% endif %}
+                {% if share.can_edit_assignee %} (can edit assignee){% endif %}
+                {% if current_user.id == item.user_id %}
+                <form method="POST" action="{{ url_for('unshare', task_id=item.id, user_id=share.user_id) }}" style="display:inline;">
+                    <button type="submit" class="btn btn-small btn-delete">Remove</button>
+                </form>
+                {% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
 </div>
 {% endblock %}

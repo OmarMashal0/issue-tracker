@@ -447,3 +447,34 @@ body {
         justify-content: center;
     }
 }
+
+.auth-switch {
+    margin-top: 15px;
+    font-size: 14px;
+    color: #555;
+}
+.auth-switch a {
+    color: #007bff;
+    text-decoration: none;
+}
+.auth-switch a:hover {
+    text-decoration: underline;
+}
+
+.badge {
+    display: inline-block;
+    padding: 3px 8px;
+    font-size: 12px;
+    border-radius: 8px;
+    margin-left: 5px;
+}
+
+.badge-owner {
+    background-color: #28a745;
+    color: white;
+}
+
+.badge-shared {
+    background-color: #17a2b8;
+    color: white;
+}

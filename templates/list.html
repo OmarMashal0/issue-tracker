@@ -52,7 +52,14 @@
                 <td>{{ item.id }}</td>
                 <td class="item-title">
                     <a href="{{ url_for('view', item_id=item.id) }}">{{ item.title }}</a>
+                    
+                    {% if item.user_id == current_user.id %}
+                        <span class="badge badge-owner">My Task</span>
+                    {% else %}
+                        <span class="badge badge-shared">Shared (owner: {{ item.owner_username }})</span>
+                    {% endif %}
                 </td>
+
                 <td>{{ item.assignee or 'Unassigned' }}</td>
                 <td>
                     <span class="status-badge status-{{ item.status.lower().replace(' ', '-') }}">
